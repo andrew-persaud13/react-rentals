@@ -1,0 +1,59 @@
+@import './colors.scss';
+@import './header.scss';
+@import './rental-home';
+@import './rentail-detail';
+@import './forms';
+
+html,
+body {
+  height: 100%;
+}
+
+.rental-link {
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.bwm-container {
+  padding-top: 70px;
+}
+.navbar-dark .navbar-nav {
+  .nav-link {
+    &:hover {
+      color: $main-blue-color;
+    }
+  }
+}
+
+.btn {
+  &.btn-bwm-main {
+    border-color: $main-blue-color;
+    color: $main-blue-color;
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: $main-blue-color;
+      border-color: $main-blue-color;
+      color: white;
+      box-shadow: none;
+    }
+  }
+}
+
+.type- {
+  &apartment {
+    color: #a72da3;
+  }
+
+  &house {
+    color: #bf1818;
+  }
+
+  &condo {
+    color: #d68000;
+  }
+}

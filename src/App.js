@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-function App() {
+import { Provider } from 'react-redux';
+import AuthProvider, { useAuth } from './providers/AuthProvider';
+
+import initStore from './store';
+
+import Routes from './Routes';
+import Header from './components/shared/Header';
+
+const store = initStore();
+
+const Providers = ({ children }) => (
+  <Provider store={store}>
+    <AuthProvider>{children}</AuthProvider>
+  </Provider>
+);
+
+const BwmApp = () => {
+  const authService = useAuth();
+
+  useEffect(() => {
+    authService.checkAuthState();
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Header />
+      <Routes />
+    </Router>
   );
-}
+};
+
+const App = () => {
+  return (
+    <Providers>
+      <BwmApp />
+    </Providers>
+  );
+};
 
 export default App;
