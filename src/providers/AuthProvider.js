@@ -8,7 +8,7 @@ import { loginUserAction, userAuthenticated } from '../actions';
 const AuthContext = createContext(null);
 
 const AuthProvider = ({ children, dispatch }) => {
-  const signIn = (formData) => {
+  const signIn = formData => {
     return loginUserAction(formData).then(({ token }) => {
       localStorage.setItem('bwm_token', token);
       const decodedToken = decodeToken(token);
@@ -17,7 +17,7 @@ const AuthProvider = ({ children, dispatch }) => {
     });
   };
 
-  const decodeToken = (token) => {
+  const decodeToken = token => {
     return jwt.decode(token);
   };
 
@@ -25,26 +25,28 @@ const AuthProvider = ({ children, dispatch }) => {
     return localStorage.getItem('bwm_token');
   };
 
-  const getExpiration = (decodedToken) => {
+  const getExpiration = decodedToken => {
     return moment.unix(decodedToken.exp);
   };
 
   //To persist the auth state on refreshes
   const checkAuthState = () => {
-    const token = getToken();
-    const decodedToken = decodeToken(token);
-    if (token && moment().isBefore(getExpiration(decodedToken))) {
+    const decodedToken = decodeToken(getToken());
+    debugger;
+    if (isTokenValid(decodedToken)) {
       dispatch(userAuthenticated(decodedToken));
     }
   };
 
-  //For auth routes
+  //For auth routes --> no dispatch, returning bool
   const isAuthenticated = () => {
-    const decodedToken = decodeToken(getToken());
+    const token = getToken();
+    if (!token) return false;
+    const decodedToken = decodeToken(token);
     return decodedToken && isTokenValid(decodedToken);
   };
 
-  const isTokenValid = (decodedToken) => {
+  const isTokenValid = decodedToken => {
     return decodedToken && moment().isBefore(getExpiration(decodedToken));
   };
 
@@ -71,9 +73,9 @@ export const useAuth = () => {
 };
 
 //For class components
-export const withAuth = (Component) => (props) => (
+export const withAuth = Component => props => (
   <AuthContext.Consumer>
-    {(authApi) => <Component {...props} auth={authApi} />}
+    {authApi => <Component {...props} auth={authApi} />}
   </AuthContext.Consumer>
 );
 

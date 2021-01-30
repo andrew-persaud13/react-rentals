@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-
 const config = require('../config/dev');
 
 exports.login = (req, res) => {
@@ -77,7 +76,7 @@ exports.register = (req, res) => {
 
     const user = new User({ username, email, password });
 
-    user.save((error) => {
+    user.save(error => {
       if (error) {
         return res.mongoError(error);
       }
