@@ -22,10 +22,10 @@ class Login extends Component {
 
   render() {
     const { errors, shouldRedirect } = this.state;
-    const { message, redirectTo = '/' } = this.props.location.state || '';
+    const { message } = this.props.location.state || '';
 
-    if (shouldRedirect || redirectTo) {
-      return <Redirect to={{ pathname: redirectTo }} />;
+    if (shouldRedirect) {
+      return <Redirect to={{ pathname: '/' }} />;
     }
     return (
       <div className='bwm-form'>

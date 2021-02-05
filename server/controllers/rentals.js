@@ -26,8 +26,10 @@ const getRentalById = async (req, res) => {
   });
 };
 
+//access to user due to auth middleware---> res.locals.user
 const create = (req, res) => {
   const rentalData = req.body;
+  rentalData.owner = res.locals.user;
   Rental.create(rentalData, (error, rental) => {
     if (error) {
       return Rental.sendError(res, {
@@ -40,8 +42,29 @@ const create = (req, res) => {
   });
 };
 
+const isUserRentalOwner = (req, res, next) => {
+  const { rental } = req.body;
+
+  Rental.findById(rental, (error, foundRental) => {
+    if (error) {
+      return res.mongoError(error);
+    }
+    console.log(foundRental.owner === res.locals.user._id);
+
+    if (foundRental.owner.toString() === res.locals.user._id.toString()) {
+      return res.sendApiError({
+        title: 'Booking Error',
+        detail: 'Owners cannot book their own rental.',
+      });
+    }
+
+    next();
+  });
+};
+
 module.exports = {
   getRentals,
   getRentalById,
   create,
+  isUserRentalOwner,
 };

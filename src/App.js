@@ -8,12 +8,17 @@ import initStore from './store';
 
 import Routes from './Routes';
 import Header from './components/shared/Header';
+import MapProvider from 'providers/MapProvider';
 
 const store = initStore();
 
 const Providers = ({ children }) => (
   <Provider store={store}>
-    <AuthProvider>{children}</AuthProvider>
+    <AuthProvider>
+      <MapProvider apiKey='jKaqlzq27pRIj5atWwC5NeGYozgldx8I'>
+        {children}
+      </MapProvider>
+    </AuthProvider>
   </Provider>
 );
 

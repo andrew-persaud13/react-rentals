@@ -32,7 +32,6 @@ const AuthProvider = ({ children, dispatch }) => {
   //To persist the auth state on refreshes
   const checkAuthState = () => {
     const decodedToken = decodeToken(getToken());
-    debugger;
     if (isTokenValid(decodedToken)) {
       dispatch(userAuthenticated(decodedToken));
     }

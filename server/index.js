@@ -13,6 +13,7 @@ const { onlyAuthUser } = require('./controllers/users');
 
 require('./models/rental');
 require('./models/user');
+require('./models/booking');
 
 mongoose.connect(
   config.DB_URI,
@@ -28,7 +29,7 @@ mongoose.connect(
 
 //Middleware
 app.use(bodyParser.json());
-app.use(provideErrorHandler)
+app.use(provideErrorHandler);
 
 app.get('/api/v1/secret', onlyAuthUser, (req, res) => {
   return res.json({ message: 'Secret msg' });
@@ -37,5 +38,6 @@ app.get('/api/v1/secret', onlyAuthUser, (req, res) => {
 //API routes
 app.use('/api/v1/rentals', require('./routes/rentals'));
 app.use('/api/v1/users', require('./routes/users'));
+app.use('/api/v1/bookings', require('./routes/bookings'));
 
 app.listen(PORT, () => console.log('Server is running', PORT));
