@@ -1,8 +1,13 @@
 const Rental = require('../models/rental');
+const Booking = require('../models/booking');
+const moment = require('moment');
 
 const getRentals = async (req, res) => {
+  const { city } = req.query;
+  const query = city ? { city: city.toLowerCase() } : {};
+  console.log(query);
   try {
-    return res.json(await Rental.find({}));
+    return res.json(await Rental.find(query));
   } catch (err) {
     return Rental.sendError(res, {
       status: 422,
@@ -14,16 +19,28 @@ const getRentals = async (req, res) => {
 const getRentalById = async (req, res) => {
   const { id } = req.params;
 
-  Rental.findById(id, (err, rental) => {
-    if (err) {
-      return Rental.sendError(res, {
+  const rental = await Rental.findById(id)
+    .populate('owner', '-password -_id')
+    .catch(err =>
+      Rental.sendError(res, {
         status: 422,
         detail: 'Cannot retrieve rental',
-      });
-    }
+      })
+    );
 
-    return res.json(rental);
-  });
+  res.json(rental);
+};
+
+const getRentalsByUser = async (req, res) => {
+  const { user } = res.locals;
+
+  try {
+    const rentals = await Rental.find({ owner: user }).populate('owner');
+
+    res.json(rentals);
+  } catch (error) {
+    return res.mongoError(error);
+  }
 };
 
 //access to user due to auth middleware---> res.locals.user
@@ -45,11 +62,17 @@ const create = (req, res) => {
 const isUserRentalOwner = (req, res, next) => {
   const { rental } = req.body;
 
+  if (!rental) {
+    return res.sendApiError({
+      title: 'Booking Error',
+      detail: 'No rental specified.',
+    });
+  }
+
   Rental.findById(rental, (error, foundRental) => {
     if (error) {
       return res.mongoError(error);
     }
-    console.log(foundRental.owner === res.locals.user._id);
 
     if (foundRental.owner.toString() === res.locals.user._id.toString()) {
       return res.sendApiError({
@@ -62,9 +85,48 @@ const isUserRentalOwner = (req, res, next) => {
   });
 };
 
+const deleteRental = async (req, res) => {
+  const { rentalId } = req.params;
+  const { user } = res.locals;
+
+  try {
+    const rental = await Rental.findOne({ _id: rentalId });
+
+    if (rental.owner.toString() !== user._id.toString()) {
+      return res.sendApiError({
+        title: 'Rental Error',
+        detail: 'You cannot delete a rental you do not own.',
+      });
+    }
+
+    const bookings = await Booking.find({ rental: rentalId });
+
+    if (bookings.length) {
+      const isStartDateInFuture = bookings.some(
+        booking => moment(booking.startAt).diff(moment(), 'days') > -1
+      );
+
+      if (isStartDateInFuture) {
+        return res.sendApiError({
+          title: 'Rental Error',
+          detail: 'You cannot delete a rental that has an active booking.',
+        });
+      }
+    }
+
+    await Rental.findOneAndDelete({ _id: rentalId });
+
+    return res.status(204).json({ id: rentalId });
+  } catch (error) {
+    res.mongoError(error);
+  }
+};
+
 module.exports = {
   getRentals,
   getRentalById,
   create,
   isUserRentalOwner,
+  getRentalsByUser,
+  deleteRental,
 };

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import { Provider } from 'react-redux';
 import AuthProvider, { useAuth } from './providers/AuthProvider';
@@ -40,6 +41,7 @@ const BwmApp = () => {
 const App = () => {
   return (
     <Providers>
+      <ToastContainer />
       <BwmApp />
     </Providers>
   );

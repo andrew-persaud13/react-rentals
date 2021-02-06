@@ -79,3 +79,11 @@
     padding-top: 15px;
   }
 }
+
+.daterangepicker td.in-range {
+  background-color: $main-blue-color;
+}
+
+.daterangepicker td.active {
+  background-color: $main-blue-color;
+}

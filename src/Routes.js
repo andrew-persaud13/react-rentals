@@ -11,6 +11,7 @@ import Logout from './pages/Logout';
 import Register from './pages/Register';
 import SecretPage from './pages/SecretPage';
 import RentalNew from 'pages/RentalNew';
+import RentalHomeSearch from 'pages/RentalHomeSearch';
 
 const Routes = () => {
   return (
@@ -20,9 +21,10 @@ const Routes = () => {
         <GuestRoute path='/login' component={Login} />
         <GuestRoute path='/register' component={Register} />
         <AuthRoute path='/logout' component={Logout} />
-        <Route path='/rentals/:id' component={RentalDetail} />
+        <Route exact path='/rentals/:id' component={RentalDetail} />
         <AuthRoute path='/secret' component={SecretPage} />
-        <AuthRoute path='/rental/new' component={RentalNew} />
+        <AuthRoute exact path='/rental/new' component={RentalNew} />
+        <Route path='/rentals/:location/homes' component={RentalHomeSearch} />
       </Switch>
     </div>
   );

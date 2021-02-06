@@ -10,12 +10,16 @@ const data = {
       username: 'tenshu',
       email: 'tips@meeps.com',
       password: '123456',
+      avatar:
+        'https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/UP2477-CUSA06694_00-AV00000000000039/image?w=320&h=320&bg_color=000000&opacity=100&_version=00_09_000',
     },
     {
       _id: user2Id,
       username: 'mapleton',
       email: 'mip@meeps.com',
       password: '123456',
+      avatar:
+        'https://i.pinimg.com/736x/36/16/1e/36161e373bb92df4a1aea6d58c35c31a.jpg',
     },
   ],
   rentals: [

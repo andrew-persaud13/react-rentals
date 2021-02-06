@@ -1,28 +1,59 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import DateRangePicker from 'react-bootstrap-daterangepicker';
-import moment from 'moment';
+import Moment from 'moment';
+import { toast } from 'react-toastify';
+import { extendMoment } from 'moment-range';
 
 import BwmModal from 'components/shared/Modal';
+import ApiErrors from 'components/forms/ApiErrors';
+
+import { createBooking, getBookingsByRental } from 'actions';
+
+const moment = extendMoment(Moment);
 
 class BookingReserve extends React.Component {
   constructor() {
     super();
     this.dateRef = React.createRef();
+    this.bookedOutDates = [];
     this.state = {
+      errors: [],
       proposedBooking: {
-        guests: '',
+        guests: 1,
         endAt: null,
         startAt: null,
       },
     };
   }
 
+  componentDidMount() {
+    const { rental } = this.props;
+    // getBookingsByRental(rental._id)
+    //   .then(res => res.data)
+    //   .then(({ bookings }) =>
+    //     this.setState({
+    //       bookings,
+    //     })
+    //   );
+    getBookingsByRental(rental._id)
+      .then(({ data }) => data)
+      .then(({ bookings }) => {
+        this.bookedOutDates = bookings;
+      });
+  }
+
   get nights() {
     const { endAt, startAt } = this.state.proposedBooking;
+    if (!endAt || !startAt) return null;
+
+    return Array.from(moment.range(startAt, endAt).by('days')).length - 1;
   }
 
   get totalPrice() {
-    const { guests, endAt, startAt } = this.state.proposedBooking;
+    const { rental } = this.props;
+
+    return rental.dailyPrice * this.nights;
   }
 
   get isBookingDataValid() {
@@ -30,13 +61,40 @@ class BookingReserve extends React.Component {
     return guests && endAt && startAt;
   }
 
-  reserveRental = () => {
-    alert(JSON.stringify(this.state.proposedBooking));
+  reserveRental = done => {
+    createBooking(this.state.proposedBooking)
+      .then(newBooking => {
+        toast.success('Rental successfully booked!!', { autoClose: 2000 });
+        this.bookedOutDates.push(newBooking);
+        this.resetData();
+        done();
+      })
+      .catch(errors => {
+        debugger;
+        this.setState({ errors });
+      });
+  };
+
+  resetData = () => {
+    this.dateRef.current.value = '';
+    this.setState({
+      errors: [],
+      proposedBooking: {
+        guests: 1,
+        endAt: null,
+        startAt: null,
+      },
+    });
   };
 
   checkInvalidDates = date => {
-    // if date is invalid return true
-    return date < moment().add(-1, 'days');
+    const isBookedOut =
+      (this.bookedOutDates.length &&
+        this.bookedOutDates.some(booking => {
+          return moment.range(booking.startAt, booking.endAt).contains(date);
+        })) ||
+      false;
+    return date < moment().add(-1, 'days') || isBookedOut;
   };
   handleApply = (e, { startDate, endDate }) => {
     this.dateRef.current.value =
@@ -56,7 +114,7 @@ class BookingReserve extends React.Component {
     this.setState({
       proposedBooking: {
         ...this.state.proposedBooking,
-        guests: e.target.value,
+        guests: +e.target.value,
       },
     });
   };
@@ -65,21 +123,25 @@ class BookingReserve extends React.Component {
     this.setState({
       proposedBooking: {
         ...this.state.proposedBooking,
-        nights: '',
-        totalPrice: 0,
+        nights: this.nights,
+        price: this.totalPrice,
+        rental: this.props.rental,
       },
     });
   };
 
+  resetError = () => this.setState({ errors: [] });
+
   render() {
     const {
-      proposedBooking: { guests },
+      proposedBooking: { guests, nights },
+      errors,
     } = this.state;
-    const { rental } = this.props;
+    const { rental, isAuth } = this.props;
     return (
       <div className='booking'>
         <h3 className='booking-price'>
-          $ {rental.dailyPrice}{' '}
+          $ {rental.dailyPrice}
           <span className='booking-per-night'>per night</span>
         </h3>
         <hr></hr>
@@ -110,33 +172,46 @@ class BookingReserve extends React.Component {
             aria-describedby='guests'
           ></input>
         </div>
-        <BwmModal
-          openBtn={() => (
-            <button
-              onClick={this.processAdditionalData}
-              className='btn btn-bwm-main btn-block'
-              disabled={!this.isBookingDataValid}
-            >
-              Reserve place now
-            </button>
-          )}
-          onSubmit={this.reserveRental}
-          title='Confirm Booking'
-          subtitle={this.dateRef.current?.value}
-        >
-          <em>12</em> Nights /<em>${rental.dailyPrice}</em> Per night
-          <p>Guests: {guests}</p>
-          <p>
-            Price: <em>${'300'}</em>
-          </p>
-        </BwmModal>
+
+        {isAuth && (
+          <BwmModal
+            openBtn={() => (
+              <button
+                onClick={this.processAdditionalData}
+                className='btn btn-bwm-main btn-block'
+                disabled={!this.isBookingDataValid}
+              >
+                Reserve place now
+              </button>
+            )}
+            onSubmit={this.reserveRental}
+            title='Confirm Booking'
+            subtitle={this.dateRef.current?.value}
+            resetError={this.resetError}
+          >
+            <em>{nights}</em> Nights /<em>${rental.dailyPrice}</em> Per night
+            <p>Guests: {guests}</p>
+            <p>
+              Price: <em>${this.totalPrice}</em>
+            </p>
+            <div className='pt-2'>
+              <ApiErrors errors={errors} />
+            </div>
+          </BwmModal>
+        )}
+        {!isAuth && (
+          <Link
+            className='btn btn-bwm-main btn-block'
+            to={{
+              pathname: '/login',
+              state: { redirectTo: `/rentals/${this.props.rental._id}` },
+            }}
+          >
+            Please login to complete reservation.
+          </Link>
+        )}
+
         <hr></hr>
-        <p className='booking-note-title'>
-          People are interested into this house
-        </p>
-        <p className='booking-note-text'>
-          More than 500 people checked this rental in last month.
-        </p>
       </div>
     );
   }
