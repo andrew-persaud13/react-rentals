@@ -24,21 +24,25 @@ const userSchema = new Schema({
     minlength: [4, 'Password must be at least 4 characters.'],
     maxlength: [32, 'Password cannot exceed 32 characters.'],
   },
+  avatar: {
+    type: String,
+    required: 'Avatar required',
+  },
 });
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   const user = this;
 
   bcrypt.genSalt(10, (error, salt) => {
     bcrypt.hash(user.password, salt, (err, hash) => {
-      user.password = hash
-      next()
-    })
-  })
+      user.password = hash;
+      next();
+    });
+  });
 });
 
-userSchema.methods.verifyPassword = function(inputPassword) {
-  return bcrypt.compareSync(inputPassword, this.password)
-}
+userSchema.methods.verifyPassword = function (inputPassword) {
+  return bcrypt.compareSync(inputPassword, this.password);
+};
 
 module.exports = mongoose.model('User', userSchema);

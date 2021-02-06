@@ -36,7 +36,7 @@ exports.getBookingsForRentalOwner = async (req, res) => {
     const bookings = await Booking.find({ rental: { $in: rentalIds } })
       .populate('owner', '-password')
       .populate('rental');
-    return res.json({ bookings });
+    return res.json(bookings);
   } catch (error) {
     res.mongoError(error);
   }

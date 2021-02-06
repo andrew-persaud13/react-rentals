@@ -2,22 +2,23 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import CreateRentalForm from '../components/forms/CreateRentalForm';
 import { createRental } from '../actions';
-
+import ApiErrors from 'components/forms/ApiErrors';
 class RentalNew extends React.Component {
   state = {
     shouldRedirect: false,
+    errors: [],
   };
 
   handleSubmit = data => {
     createRental(data)
       .then(_ => {
-        this.setState({ shouldRedirect: true });
+        this.setState({ shouldRedirect: true, errors: [] });
       })
-      .catch(error => console.log(error));
+      .catch(errors => this.setState({ errors }));
   };
 
   render() {
-    const { shouldRedirect } = this.state;
+    const { shouldRedirect, errors } = this.state;
 
     if (shouldRedirect) return <Redirect to={{ pathname: '/' }} />;
     return (
@@ -29,6 +30,7 @@ class RentalNew extends React.Component {
                 <h1 className='page-title'>
                   Create Rental
                   <CreateRentalForm onSubmit={this.handleSubmit} />
+                  <ApiErrors errors={errors} />
                 </h1>
 
                 {/* <div>

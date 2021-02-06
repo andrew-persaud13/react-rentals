@@ -52,12 +52,14 @@ const Header = ({ auth: { username, isAuth } }) => {
                   <Link className='dropdown-item' to='/rental/new'>
                     Create Rental
                   </Link>
-                  <Link className='dropdown-item' to='/'>
-                    Another action
+                  <Link className='dropdown-item' to='/rentals/manage'>
+                    Manage Rentals
                   </Link>
-                  <div className='dropdown-divider'></div>
-                  <Link className='dropdown-item' to='/'>
-                    Something else here
+                  <Link className='dropdown-item' to='/bookings/manage'>
+                    Manage Bookings
+                  </Link>
+                  <Link className='dropdown-item' to='/bookings/received'>
+                    Received Bookings
                   </Link>
                 </div>
               </li>

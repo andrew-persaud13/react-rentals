@@ -27,3 +27,14 @@ export const fetchRentalByID = id => dispatch => {
 };
 
 export const createRental = rental => bwmAxios.post('/rentals', rental);
+
+export const fetchUserRentals = () => dispatch => {
+  dispatch({ type: 'REQUEST_DATA', resource: 'manage-rentals' });
+  bwmAxios.get('/rentals/me').then(response =>
+    dispatch({
+      type: 'REQUEST_DATA_COMPLETE',
+      payload: response.data,
+      resource: 'manage-rentals',
+    })
+  );
+};
