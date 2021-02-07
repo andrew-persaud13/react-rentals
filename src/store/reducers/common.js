@@ -23,6 +23,24 @@ export const itemsReducer = resource => {
         return [];
       case 'REQUEST_DATA_COMPLETE':
         return action.payload;
+      case 'DATA_REMOVE':
+        return state.filter(item => item._id !== action._id);
+      default:
+        return state;
+    }
+  };
+};
+
+export const errorsReducer = resource => {
+  return (state = [], action) => {
+    if (resource !== action.resource) return state;
+
+    switch (action.type) {
+      case 'DATA_ERROR':
+        return action.payload;
+      case 'REQUEST_DATA':
+      case 'DATA_REMOVE':
+        return [];
       default:
         return state;
     }
@@ -32,9 +50,11 @@ export const itemsReducer = resource => {
 export const createList = resource => {
   const items = itemsReducer(resource);
   const isFetching = isFetchingReducer(resource);
+  const errors = errorsReducer(resource);
 
   return combineReducers({
     items,
     isFetching,
+    errors,
   });
 };

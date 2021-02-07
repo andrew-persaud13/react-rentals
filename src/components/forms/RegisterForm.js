@@ -76,6 +76,19 @@ const RegisterForm = ({ onSubmit }) => {
         />
         <FormError errors={errors} name='passwordConfirmation' />
       </div>
+      <div className='form-group'>
+        <label htmlFor='avatar'>Avatar</label>
+        <input
+          ref={register({
+            required: 'Avatar is required',
+          })}
+          type='text'
+          className='form-control'
+          id='avatar'
+          name='avatar'
+        />
+        <FormError errors={errors} name='avatar' />
+      </div>
       <button type='submit' className='btn btn-bwm-main'>
         Submit
       </button>

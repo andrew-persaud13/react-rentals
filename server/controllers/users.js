@@ -46,7 +46,7 @@ exports.login = (req, res) => {
 };
 
 exports.register = (req, res) => {
-  const { username, email, password, passwordConfirmation } = req.body;
+  const { username, email, password, passwordConfirmation, avatar } = req.body;
 
   if (!password || !email) {
     return res.sendApiError({
@@ -74,7 +74,7 @@ exports.register = (req, res) => {
       });
     }
 
-    const user = new User({ username, email, password });
+    const user = new User({ username, email, password, avatar });
 
     user.save(error => {
       if (error) {

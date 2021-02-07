@@ -7,7 +7,7 @@ export const createBooking = data =>
   bwmAxios
     .post('/bookings', data)
     .then(res => res.data)
-    .catch(error => Promise.reject(extractApiErrors(error.response || {})));
+    .catch(error => Promise.reject(extractApiErrors(error.response || [])));
 
 export const getBookingsByRental = async rentalId =>
   bwmAxios.get(`/bookings/${rentalId}`);
@@ -33,3 +33,16 @@ export const fetchUserReceivedBookings = () => dispatch => {
     })
   );
 };
+
+export const deleteBooking = bookingId => dispatch =>
+  bwmAxios
+    .delete(`/bookings/${bookingId}`)
+    .then(response => response.data)
+    .then(({ _id }) =>
+      dispatch({ type: 'DATA_REMOVE', _id, resource: 'manage-bookings' })
+    )
+    .catch(errors => {
+      const payload = extractApiErrors(errors.response || []);
+      dispatch({ type: 'DATA_ERROR', payload, resource: 'manage-bookings' });
+      return Promise.reject();
+    });

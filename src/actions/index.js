@@ -11,7 +11,7 @@ export const extractApiErrors = resError => {
 
   //over write default if it's error from our api
   if (resError && resError.data && resError.data.errors) {
-    errors = resError.data.errors;
+    errors = resError.data.errors; //this is an array of errors from backend
   }
 
   return errors;

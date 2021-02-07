@@ -116,7 +116,7 @@ const deleteRental = async (req, res) => {
 
     await Rental.findOneAndDelete({ _id: rentalId });
 
-    return res.status(204).json({ id: rentalId });
+    return res.json({ _id: rentalId });
   } catch (error) {
     res.mongoError(error);
   }

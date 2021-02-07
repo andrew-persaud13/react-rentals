@@ -1,5 +1,5 @@
 import axiosService from '../services/AxiosService';
-
+import { extractApiErrors } from './';
 const { bwmAxios } = axiosService;
 
 export const fetchRentals = (location = '') => dispatch => {
@@ -38,3 +38,24 @@ export const fetchUserRentals = () => dispatch => {
     })
   );
 };
+
+export const deleteRental = rentalId => dispatch =>
+  bwmAxios
+    .delete(`/rentals/${rentalId}`)
+    .then(response => response.data)
+    .then(({ _id }) =>
+      dispatch({
+        type: 'DATA_REMOVE',
+        resource: 'manage-rentals',
+        _id,
+      })
+    )
+    .catch(error => {
+      const payload = extractApiErrors(error.response || {});
+      dispatch({
+        type: 'DATA_ERROR',
+        payload,
+        resource: 'manage-rentals',
+      });
+      return Promise.reject();
+    });

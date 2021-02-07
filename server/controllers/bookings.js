@@ -97,13 +97,14 @@ exports.deleteBooking = async (req, res) => {
     if (moment(booking.startAt).diff(moment(), 'days') <= DAYS_THRESHOLD) {
       return res.sendApiError({
         title: 'Booking Error',
-        detail: 'You cannot delete this booking. Please contact administration',
+        detail:
+          'You cannot delete this booking within 3 days of start date. Please contact administration',
       });
     }
 
     //all good
     await Booking.findOneAndDelete({ _id: bookingId });
-    return res.json({ id: bookingId });
+    return res.json({ _id: bookingId });
   } catch (error) {
     res.mongoError(error);
   }

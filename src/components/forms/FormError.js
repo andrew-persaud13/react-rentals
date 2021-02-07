@@ -3,8 +3,9 @@ import React from 'react';
 const FormError = ({ errors, name }) => {
   const error = errors[name] || null;
   if (!error) return null;
+  debugger;
   return (
-    <div className="alert alert-danger">
+    <div className='alert alert-danger'>
       <p>{error.message}</p>
     </div>
   );
