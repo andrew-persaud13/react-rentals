@@ -59,3 +59,29 @@ export const deleteRental = rentalId => dispatch =>
       });
       return Promise.reject();
     });
+
+export const updateRental = (rentalId, data) => dispatch =>
+  bwmAxios
+    .patch(`/rentals/${rentalId}`, data)
+    .then(response => response.data)
+    .then(payload =>
+      dispatch({
+        type: 'DATA_UPDATE',
+        _id: rentalId,
+        payload,
+        resource: 'manage-rentals',
+      })
+    )
+    .catch(error => {
+      dispatch({
+        type: 'DATA_ERROR',
+        resource: 'manage-rentals',
+        payload: extractApiErrors(error.response || []),
+      });
+      return Promise.reject(extractApiErrors(error.response || []));
+    });
+
+export const verifyRentalOwner = rentalId =>
+  bwmAxios.get(`/rentals/${rentalId}/verify-user`);
+
+export const unMountRental = () => ({ type: 'UNMOUNT_RENTAL' });

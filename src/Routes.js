@@ -15,6 +15,7 @@ import RentalHomeSearch from 'pages/RentalHomeSearch';
 import ManageBookings from 'pages/ManageBookings';
 import ManageRentals from 'pages/ManageRentals';
 import ReceivedBookings from 'pages/ReceivedBookings';
+import RentalEdit from 'pages/RentalEdit';
 
 const Routes = () => {
   return (
@@ -35,6 +36,7 @@ const Routes = () => {
         <AuthRoute path='/secret' component={SecretPage} />
         <AuthRoute exact path='/rental/new' component={RentalNew} />
         <Route path='/rentals/:location/homes' component={RentalHomeSearch} />
+        <AuthRoute path='/rentals/:id/edit' component={RentalEdit} />
       </Switch>
     </div>
   );

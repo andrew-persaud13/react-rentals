@@ -44,5 +44,5 @@ export const deleteBooking = bookingId => dispatch =>
     .catch(errors => {
       const payload = extractApiErrors(errors.response || []);
       dispatch({ type: 'DATA_ERROR', payload, resource: 'manage-bookings' });
-      return Promise.reject();
+      return Promise.reject(); //incase you want to also do a toast notif in catch block on component
     });

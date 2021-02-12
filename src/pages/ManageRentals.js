@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import { fetchUserRentals, deleteRental } from 'actions';
@@ -29,8 +30,14 @@ class ManageRentals extends React.Component {
                 onClick={() => this.deleteRental(rental._id)}
                 className='btn btn-danger'
               >
-                Delete Me
+                Delete
               </button>
+              <Link
+                to={`/rentals/${rental._id}/edit`}
+                className='ml-2 btn btn-bwm-main'
+              >
+                Update
+              </Link>
             </>
           )}
         />

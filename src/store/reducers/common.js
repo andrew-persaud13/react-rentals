@@ -25,6 +25,10 @@ export const itemsReducer = resource => {
         return action.payload;
       case 'DATA_REMOVE':
         return state.filter(item => item._id !== action._id);
+      case 'DATA_UPDATE':
+        return state.map(item =>
+          item._id === action._id ? action.payload : item
+        );
       default:
         return state;
     }
@@ -40,6 +44,7 @@ export const errorsReducer = resource => {
         return action.payload;
       case 'REQUEST_DATA':
       case 'DATA_REMOVE':
+      case 'DATA_UPDATE':
         return [];
       default:
         return state;
