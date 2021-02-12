@@ -19,17 +19,17 @@ const RentalInfo = ({ rental }) => (
     <h2 className='rental-city'>{capitalize(rental.city)}</h2>
     <div className='rental-room-info'>
       <span>
-        <FontAwesomeIcon className='fa fa-building'></FontAwesomeIcon>
+        <FontAwesomeIcon icon='building'></FontAwesomeIcon>
         {rental.numOfRooms} {rental.numOfRooms > 1 ? 'Bedrooms' : 'Bedroom'}
       </span>
 
       <span>
-        <FontAwesomeIcon className='fa fa-user'></FontAwesomeIcon> 8 guests
+        <FontAwesomeIcon icon='user'></FontAwesomeIcon> 8 guests
       </span>
       {/* // <!-- TODO: Display numOfRooms + 2 --> */}
       <span>
-        <FontAwesomeIcon className='fa fa-bed'></FontAwesomeIcon>{' '}
-        {rental.numOfRooms} {rental.numOfRooms > 1 ? 'Beds' : 'Bed'}
+        <FontAwesomeIcon icon='bed'></FontAwesomeIcon> {rental.numOfRooms}{' '}
+        {rental.numOfRooms > 1 ? 'Beds' : 'Bed'}
       </span>
     </div>
     {/* <!-- TODO: Display description --> */}

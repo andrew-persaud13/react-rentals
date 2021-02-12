@@ -5,7 +5,7 @@ export const capitalize = value => {
 
   return value
     .split(' ')
-    .map(word => word[0].toUpperCase() + word.slice(1))
+    .map(word => (word ? word[0].toUpperCase() + word.slice(1) : ''))
     .join(' ');
 };
 

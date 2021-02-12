@@ -9,14 +9,17 @@ import {
   unMountRental,
 } from 'actions';
 
-import RentalInfo from '../components/rental/RentalInfo';
 import TomMap from 'components/map/TomMap';
 
 import RentalAssets from 'components/rental/RentalAssets';
 import { capitalize } from 'helpers/functions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import EditableInput from 'components/editable/EditableInput';
 import { toast } from 'react-toastify';
+import {
+  EditableInput,
+  EditableSelect,
+  EditableTextArea,
+} from 'components/editable';
 
 const withUserCheck = Component => props => {
   const [guard, setGuard] = useState({
@@ -93,9 +96,22 @@ class RentalEdit extends Component {
             <div className='col-md-8'>
               {/* <RentalInfo rental={rental} /> */}
               <div className='rental'>
-                <h2 className={`rental-type type-${rental.category}`}>{`${
-                  rental.shared ? 'Shared' : 'Whole'
-                } ${rental.category}`}</h2>
+                <span>Is shared: </span>
+                <EditableSelect
+                  entity={rental}
+                  field='shared'
+                  onUpdate={this.updateData}
+                  className={`rental-type type-${rental.category}`}
+                  options={[true, false]}
+                  inline={true}
+                />
+                <EditableSelect
+                  entity={rental}
+                  field='category'
+                  onUpdate={this.updateData}
+                  className={`rental-type type-${rental.category}`}
+                  options={['apartment', 'condo', 'house']}
+                />
 
                 {/* <h1 className='rental-title'>{rental.title}</h1> */}
                 <EditableInput
@@ -109,32 +125,47 @@ class RentalEdit extends Component {
                   field='city'
                   className='rental-city'
                   onUpdate={this.updateData}
+                  transform={capitalize}
                 />
                 <EditableInput
                   entity={rental}
                   field='street'
                   className='rental-city'
                   onUpdate={this.updateData}
+                  transform={capitalize}
                 />
-                <div className='rental-room-info'>
+                <div className='rental-room-info mb-1'>
                   <span>
-                    <FontAwesomeIcon className='fa fa-building'></FontAwesomeIcon>
-                    {rental.numOfRooms}{' '}
+                    <FontAwesomeIcon icon='building'></FontAwesomeIcon>
+                    <EditableInput
+                      entity={rental}
+                      field='numOfRooms'
+                      onUpdate={this.updateData}
+                      inline={true}
+                      className={'mr-0 ml-2'}
+                    />
                     {rental.numOfRooms > 1 ? 'Bedrooms' : 'Bedroom'}
                   </span>
 
                   <span>
-                    <FontAwesomeIcon className='fa fa-user'></FontAwesomeIcon> 8
-                    guests
+                    <FontAwesomeIcon icon='user'></FontAwesomeIcon>{' '}
+                    {rental.numOfRooms * 2} guests
                   </span>
                   {/* // <!-- TODO: Display numOfRooms + 2 --> */}
                   <span>
-                    <FontAwesomeIcon className='fa fa-bed'></FontAwesomeIcon>{' '}
+                    <FontAwesomeIcon icon='bed'></FontAwesomeIcon>{' '}
                     {rental.numOfRooms} {rental.numOfRooms > 1 ? 'Beds' : 'Bed'}
                   </span>
                 </div>
-                {/* <!-- TODO: Display description --> */}
-                <p className='rental-description'>{rental.description}</p>
+
+                <EditableTextArea
+                  entity={rental}
+                  field='description'
+                  onUpdate={this.updateData}
+                  className={'rental-description'}
+                  rows={5}
+                  cols={50}
+                />
                 <hr />
                 <RentalAssets />
               </div>

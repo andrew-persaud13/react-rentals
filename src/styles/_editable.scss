@@ -1,5 +1,14 @@
 .editable-component {
   display: flex;
+  margin-bottom: 5px;
+
+  &-inline {
+    display: inline-flex;
+  }
+
+  .editable-item {
+    margin-bottom: 0 !important;
+  }
 
   .button-container {
     align-self: center;

@@ -1,19 +1,23 @@
 import React from 'react';
 import { EditableComponent } from './EditableComponent';
 
-export class EditableInput extends React.Component {
+export class EditableTextArea extends React.Component {
   render() {
+    const { rows, cols, ...rest } = this.props;
+
     return (
       <EditableComponent
         renderComponent={({ value, handleChange, handleKeyDown }) => (
-          <input
-            className={`editable-item ${this.props.className}`}
+          <textarea
             value={value}
             onChange={handleChange}
+            className={`editable-item ${this.props.className}`}
+            rows={rows}
+            cols={cols}
             onKeyDown={handleKeyDown}
           />
         )}
-        {...this.props}
+        {...rest}
       />
     );
   }
