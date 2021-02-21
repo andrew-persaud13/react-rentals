@@ -3,6 +3,10 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const user1Id = ObjectId();
 const user2Id = ObjectId();
 
+const image1Id = ObjectId();
+const image2Id = ObjectId();
+const image3Id = ObjectId();
+
 const data = {
   users: [
     {
@@ -28,8 +32,7 @@ const data = {
       city: 'San Francisco',
       street: 'Main street',
       category: 'condo',
-      image:
-        'https://booksync-jerga-prod.s3.amazonaws.com/uploads/rental/image/5/image.jpeg',
+      image: image2Id,
       numOfRooms: 4,
       shared: true,
       description: 'Very nice apartment in center of the city.',
@@ -41,8 +44,7 @@ const data = {
       city: 'New York',
       street: 'Time Square',
       category: 'apartment',
-      image:
-        'https://booksync-jerga-prod.s3.amazonaws.com/uploads/rental/image/5/image.jpeg',
+      image: image1Id,
       numOfRooms: 1,
       shared: false,
       description: 'Very nice apartment in center of the city.',
@@ -54,13 +56,32 @@ const data = {
       city: 'Bratislava',
       street: 'Letna 7',
       category: 'house',
-      image:
-        'https://booksync-jerga-prod.s3.amazonaws.com/uploads/rental/image/5/image.jpeg',
+      image: image3Id,
       numOfRooms: 5,
       shared: true,
       description: 'Very nice apartment in center of the city.',
       dailyPrice: 23,
       owner: user2Id,
+    },
+  ],
+  images: [
+    {
+      _id: image1Id,
+      cloudinaryId: 'apr1_vftjbt',
+      url:
+        'https://res.cloudinary.com/drew87p/image/upload/v1613361902/apr1_vftjbt.jpg',
+    },
+    {
+      _id: image2Id,
+      cloudinaryId: 'condo1_u0zxpb',
+      url:
+        'https://res.cloudinary.com/drew87p/image/upload/v1613361902/condo1_u0zxpb.jpg',
+    },
+    {
+      _id: image3Id,
+      cloudinaryId: 'house1_orikqc',
+      url:
+        'https://res.cloudinary.com/drew87p/image/upload/v1613361903/house1_orikqc.jpg',
     },
   ],
 };

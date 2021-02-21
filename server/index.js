@@ -39,5 +39,6 @@ app.get('/api/v1/secret', onlyAuthUser, (req, res) => {
 app.use('/api/v1/rentals', require('./routes/rentals'));
 app.use('/api/v1/users', require('./routes/users'));
 app.use('/api/v1/bookings', require('./routes/bookings'));
+app.use('/api/v1/image-upload', require('./routes/image-upload'));
 
 app.listen(PORT, () => console.log('Server is running', PORT));

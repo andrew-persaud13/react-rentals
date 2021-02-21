@@ -16,7 +16,7 @@ const rentalSchema = new Schema({
     minlength: [4, 'Invalid length! Minimum is 4 characters'],
   },
   category: { type: String, required: true, lowercase: true },
-  image: { type: String, required: true },
+  image: { type: Schema.Types.ObjectId, ref: 'Cloudinary' },
   numOfRooms: { type: Number, required: true },
   description: { type: String, required: true },
   dailyPrice: { type: Number, required: true },

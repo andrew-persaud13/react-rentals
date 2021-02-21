@@ -7,7 +7,7 @@ const getRentals = async (req, res) => {
   const query = city ? { city: city.toLowerCase() } : {};
   console.log(query);
   try {
-    return res.json(await Rental.find(query));
+    return res.json(await Rental.find(query).populate('image'));
   } catch (err) {
     return Rental.sendError(res, {
       status: 422,
@@ -20,6 +20,7 @@ const getRentalById = async (req, res) => {
   const { id } = req.params;
 
   const rental = await Rental.findById(id)
+    .populate('image')
     .populate('owner', '-password -_id')
     .catch(err =>
       Rental.sendError(res, {
@@ -56,7 +57,9 @@ const getRentalsByUser = async (req, res) => {
   const { user } = res.locals;
 
   try {
-    const rentals = await Rental.find({ owner: user }).populate('owner');
+    const rentals = await Rental.find({ owner: user })
+      .populate('owner')
+      .populate('image');
 
     res.json(rentals);
   } catch (error) {

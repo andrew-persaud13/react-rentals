@@ -84,7 +84,7 @@ class RentalEdit extends Component {
         <div className='upper-section'>
           <div className='row'>
             <div className='col-md-6'>
-              <img src={rental.image} alt={rental.title} />
+              <img src={rental.image.url} alt={rental.title} />
             </div>
             <div className='col-md-6'>
               <TomMap location={this.location} />

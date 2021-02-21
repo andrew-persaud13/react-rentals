@@ -6,7 +6,7 @@ const RentalCard = ({ rental, renderMenu: RenderMenu }) => {
     <>
       <Link className='rental-link' to={`/rentals/${rental._id}`}>
         <div className='card bwm-card'>
-          <img className='card-img-top' src={rental.image} alt='rental' />
+          <img className='card-img-top' src={rental.image.url} alt='rental' />
           <div className='card-body'>
             <h6 className={`card-subtitle mb-0 type-${rental.category}`}>
               {rental.shared ? 'Shared' : 'Whole'} {rental.category} &#183;{' '}
