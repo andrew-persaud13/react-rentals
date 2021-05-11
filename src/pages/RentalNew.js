@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import CreateRentalForm from '../components/forms/CreateRentalForm';
+
 import { createRental } from '../actions';
 import ApiErrors from 'components/forms/ApiErrors';
 class RentalNew extends React.Component {

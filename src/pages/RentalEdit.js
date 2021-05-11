@@ -19,6 +19,7 @@ import {
   EditableInput,
   EditableSelect,
   EditableTextArea,
+  EditableImage,
 } from 'components/editable';
 
 const withUserCheck = Component => props => {
@@ -80,11 +81,19 @@ class RentalEdit extends Component {
     if (loading || !rental._id) return 'Loading...';
 
     return (
-      <section id='rentalDetails'>
+      <section id='rentalEdit'>
         <div className='upper-section'>
           <div className='row'>
             <div className='col-md-6'>
-              <img src={rental.image.url} alt={rental.title} />
+              {/* <img src={rental.image.url} alt={rental.title} /> */}
+              <EditableImage
+                entity={rental}
+                field='image'
+                onUpdate={this.updateRental}
+                transform={value => value.url} //value is image object from database
+                className='rental-img mb-2'
+                containerType={'block'}
+              />
             </div>
             <div className='col-md-6'>
               <TomMap location={this.location} />
@@ -111,13 +120,14 @@ class RentalEdit extends Component {
                   onUpdate={this.updateData}
                   className={`rental-type type-${rental.category}`}
                   options={['apartment', 'condo', 'house']}
+                  containerType={'inline'}
                 />
 
                 {/* <h1 className='rental-title'>{rental.title}</h1> */}
                 <EditableInput
                   entity={rental}
                   field='title'
-                  className='rental-title'
+                  className={'rental-title'}
                   onUpdate={this.updateData}
                 />
                 <EditableInput
@@ -141,7 +151,7 @@ class RentalEdit extends Component {
                       entity={rental}
                       field='numOfRooms'
                       onUpdate={this.updateData}
-                      inline={true}
+                      containerType={'inline'}
                       className={'mr-0 ml-2'}
                     />
                     {rental.numOfRooms > 1 ? 'Bedrooms' : 'Bedroom'}

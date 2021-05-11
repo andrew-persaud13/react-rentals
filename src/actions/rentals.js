@@ -26,7 +26,10 @@ export const fetchRentalByID = id => dispatch => {
   });
 };
 
-export const createRental = rental => bwmAxios.post('/rentals', rental);
+export const createRental = rental =>
+  bwmAxios
+    .post('/rentals', rental)
+    .catch(error => Promise.reject(extractApiErrors(error.response || [])));
 
 export const fetchUserRentals = () => dispatch => {
   dispatch({ type: 'REQUEST_DATA', resource: 'manage-rentals' });

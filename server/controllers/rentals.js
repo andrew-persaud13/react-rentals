@@ -73,12 +73,8 @@ const create = (req, res) => {
   rentalData.owner = res.locals.user;
   Rental.create(rentalData, (error, rental) => {
     if (error) {
-      return Rental.sendError(res, {
-        status: 422,
-        detail: 'Cannot create rental',
-      });
+      return res.mongoError(error);
     }
-
     return res.json({ message: `Rental with id ${rental._id} created` });
   });
 };
@@ -101,7 +97,11 @@ const updateRental = async (req, res) => {
     }
 
     rental.set(rentalData);
-    res.json(await rental.save());
+    await rental.save();
+    const updatedRental = await Rental.findById(id)
+      .populate('owner')
+      .populate('image');
+    res.json(updatedRental);
   } catch (error) {
     return res.mongoError(error);
   }

@@ -48,9 +48,25 @@ export class EditableComponent extends React.Component {
   fail = originalValue => () =>
     this.setState({ isActiveInput: false, value: originalValue });
 
+  renderView = () => {
+    const { value } = this.state;
+    const { transform, className, viewComponent: ViewComponent } = this.props;
+    const viewValue = transform ? transform(value) : `${value}`;
+
+    if (ViewComponent)
+      return (
+        <ViewComponent
+          value={viewValue}
+          className={`editable-item ${className}`}
+        />
+      );
+
+    return <span className={`editable-item ${className}`}>{viewValue}</span>;
+  };
+
   renderComponentView = () => {
     const { value, isActiveInput } = this.state;
-    const { transform, renderComponent, className } = this.props;
+    const { renderComponent } = this.props;
 
     if (isActiveInput) {
       return (
@@ -80,9 +96,7 @@ export class EditableComponent extends React.Component {
 
     return (
       <>
-        <span className={`editable-item ${className}`}>
-          {transform ? transform(value) : `${value}`}
-        </span>
+        {this.renderView()}
         <div className='button-container'>
           <button
             onClick={this.setIsActive}
@@ -96,13 +110,10 @@ export class EditableComponent extends React.Component {
   };
 
   render() {
-    const { inline } = this.props;
+    const { containerType } = this.props;
+    debugger;
     return (
-      <div
-        className={`editable-component ${
-          inline ? 'editable-component-inline' : ''
-        }`}
-      >
+      <div className={`editable-component editable-component-${containerType}`}>
         {this.renderComponentView()}
       </div>
     );

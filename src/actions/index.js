@@ -1,6 +1,9 @@
+import axiosService from 'services/AxiosService';
 export * from './auth';
 export * from './rentals';
 export * from './bookings';
+
+const { bwmAxios } = axiosService;
 
 export const extractApiErrors = resError => {
   //default error
@@ -15,4 +18,10 @@ export const extractApiErrors = resError => {
   }
 
   return errors;
+};
+
+export const uploadImage = image => {
+  const formData = new FormData();
+  formData.append('image', image);
+  return bwmAxios.post('/image-upload', formData).then(res => res.data);
 };
